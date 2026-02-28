@@ -1,5 +1,15 @@
 {
+  "name": "todo-backend",
+  "description": "- Create a new todo\r - Fetch all todos\r - Fetch a single todo by ID\r - Update a todo\r - Delete a todo\r - Implement search functionality with debouncing on the frontend\r - Pagination",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
+    "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "mongodb": "^7.1.0",
     "mongoose": "^9.2.3"
