@@ -1,12 +1,12 @@
 # Project Flow + thought process
 
-## Requirements
+## Features
 
 - Create a new todo
 - Fetch all todos
-- Fetch a single todo by ID
 - Update a todo
 - Delete a todo
+- Fetch a single todo by ID
 - Implement search functionality with debouncing on the frontend
 - Pagination
 
@@ -25,11 +25,15 @@
 2. mongodb
 3. dotenv
 
-- bacause we cannot directly require env as we are not exporting anything from file.
-- dotenv package takes .env file, parse it in key-value pair, and them add environment variables to inbuilt object of node js i.e process.env
+- because we cannot directly require env as we are not exporting anything from file.
 - require is meant for json or js modules not for plain text like .env files
+- dotenv package takes .env file, parse it in key-value pair, and them add environment variables to inbuilt object of node js i.e process.env
+
+4. mongoose
+5. validator
 
 ##
 
 - created a server using express.
 - created a database
+- connecting to the database before connecting to server as if we run the server first and user accessed something, our app will crash as our db is not connected we will run into erros
