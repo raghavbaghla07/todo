@@ -1,7 +1,4 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 
 const todoSchema = new mongoose.Schema({
     title: {
@@ -12,6 +9,11 @@ const todoSchema = new mongoose.Schema({
     description: {
         type: String,
         trim: true,
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     }
     ,
     completed: {

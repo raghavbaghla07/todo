@@ -40,6 +40,14 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 })
 
+userSchema.pre("save", async function () {
+    const user = this;
+    if (user.isModified("password"))
+        user.password = await bcrypt.hash(user.password, 10);
+})
+
+
+
 userSchema.methods.getJWT = async function () {
     const user = this;
     const token = jwt.sign(
