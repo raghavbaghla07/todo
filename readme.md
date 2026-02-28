@@ -32,8 +32,25 @@
 4. mongoose
 5. validator
 
-##
+#
 
 - created a server using express.
 - created a database
-- connecting to the database before connecting to server as if we run the server first and user accessed something, our app will crash as our db is not connected we will run into erros
+- connecting to the database before connecting to server as if we run the server first and user accessed something,
+  our app will crash as our db is not connected we will run into erros
+- designed schema for how user and todo should look like, used validator package to check if user is writing a valid email and a check for strong password
+- added custom method to userSchema so that when a user logs in,
+  we will share him a jwt token,
+  that will be used to verify if the data accessed by the user is the one to whom it belongs to
+
+  ### But why are we are sending the token if user is already signedin?
+
+- Reason: HTTP requests are stateless,
+  it does not remember anything once an event happened
+  so we need to verify again.
+
+- password verification method:
+  when a user enters a password, so here bcrypt takes the input pass, and then it compares it with the password that is stored inside the database in hashed format
+
+  ### but as bcrpt will generates a hash on our password and compares it with the one stored in db, would not that be different as hash that was created while storing it in db would be different to that of that is generated for current input
+  - bcrypt uses a salt.. and we give this as input while we are signing up.. that hash value contains the salt and while we are comparing the input and the value stored in db it use that salt and if the password is same the hash value that would be generated would be same
