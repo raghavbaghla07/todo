@@ -31,6 +31,9 @@
 
 4. mongoose
 5. validator
+6. jsonwebtoken
+7. bcrypt
+8. cookie-parser
 
 #
 
@@ -56,3 +59,10 @@
   - bcrypt uses a salt.. and we give this as input while we are signing up.. that hash value contains the salt and while we are comparing the input and the value stored in db it use that salt and if the password is same the hash value that would be generated would be same
 
   - wrote a .pre() middleware that will hash the password before saving it into the db whenever user.save() will be called, and there would be a check if password is modified, if yes, a new hash would be generated and saved inside the passord in db
+
+- created a auth middleware in which:
+  - we extract the token from req.cookie
+  - token verification using jwt
+  - if present we will store this in req.user and called the next
+
+-
