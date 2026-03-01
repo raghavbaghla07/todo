@@ -1,8 +1,9 @@
 const express = require("express")
 const todoRouter = express.Router();
 const { userAuth } = require("../middlewares/auth")
-const Todo = require("../models/todo")
+const Todo = require("../models/todo");
 
+const { validateEditTodoData } = require("../utils/validation")
 //crate a todo
 todoRouter.post("/todo", userAuth, async (req, res) => {
     try {
@@ -49,14 +50,25 @@ todoRouter.get("/todo/:id", userAuth, async (req, res) => {
 //update todo
 todoRouter.patch("/todo/:id", userAuth, async (req, res) => {
     try {
+        if (!validateEditTodoData(req))
+            return res.status(400).send("Invalid fields to update");
+
         const updatedTodo = await Todo.findOneAndUpdate({
             userId: req.user._id,
             _id: req.params.id
         },
             req.body,
-            { new: true }
+            {
+                new: true,
+                runValidators: true
+            }
         );
+
+        if (!updatedTodo)
+            return res.status(404).send("todo not found")
+
         res.send(updatedTodo);
+
     } catch (err) {
         res.status(400).send("ERROR: " + err.message)
     }
