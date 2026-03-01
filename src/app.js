@@ -8,6 +8,12 @@ require("dotenv").config();
 app.use(express.json());
 app.use(cookieParser())
 
+const authRouter = require("./routes/auth");
+app.use("/", authRouter)
+
+const todoRouter = require("./routes/todo");
+app.use("/", todoRouter)
+
 connectDB()
     .then(() => {
         console.log("database connected successfully");

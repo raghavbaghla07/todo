@@ -1,6 +1,7 @@
 const express = require('express');
 const authRouter = express.Router();
 const User = require("../models/user")
+
 const validateSignUpData = require("../utils/validation")
 
 authRouter.post("/signup", async (req, res) => {
@@ -21,7 +22,7 @@ authRouter.post("/signup", async (req, res) => {
     } catch (err) {
         res
             .status(400)
-            .send("ERROR: " + err.message)
+            .send("ERROR: email already exists")
     }
 })
 
