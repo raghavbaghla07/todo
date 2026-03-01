@@ -34,6 +34,7 @@
 6. jsonwebtoken
 7. bcrypt
 8. cookie-parser
+9. nodemon
 
 #
 

@@ -10,4 +10,19 @@ const validateSignUpData = (req) => {
         throw new Error("choose a strong password")
 }
 
-module.exports = validateSignUpData;
+const validateEditTodoData = (req) => {
+    const allowedEditFields = [
+        "title",
+        "description",
+        "completed"
+    ];
+
+    const isEditAllowed = Object.keys(req.body).every(field =>
+        allowedEditFields.includes(field));
+
+    return isEditAllowed;
+
+}
+module.exports = {
+    validateSignUpData, validateEditTodoData
+}

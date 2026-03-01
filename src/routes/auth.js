@@ -2,7 +2,7 @@ const express = require('express');
 const authRouter = express.Router();
 const User = require("../models/user")
 
-const validateSignUpData = require("../utils/validation")
+const { validateSignUpData } = require("../utils/validation")
 
 authRouter.post("/signup", async (req, res) => {
     // jo bhi req se user ka data ayagea we will send it in this
