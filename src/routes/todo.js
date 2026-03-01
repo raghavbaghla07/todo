@@ -22,10 +22,16 @@ todoRouter.post("/todo", userAuth, async (req, res) => {
 
 //get all todo
 todoRouter.get("/todos", userAuth, async (req, res) => {
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
     try {
         const todos = await Todo.find({
             userId: req.user._id
         })
+            .skip(skip)
+            .limit(limit)
         res.send(todos);
     } catch (err) {
         res.status(400).send("ERROR: " + err.message)
@@ -59,7 +65,7 @@ todoRouter.patch("/todo/:id", userAuth, async (req, res) => {
         },
             req.body,
             {
-                new: true,
+                returnDocument: "after",
                 runValidators: true
             }
         );
