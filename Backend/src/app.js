@@ -8,6 +8,9 @@ require("dotenv").config();
 app.use(express.json());
 app.use(cookieParser())
 
+const cors = require("cors");
+app.use(cors());
+
 const authRouter = require("./routes/auth");
 app.use("/", authRouter)
 
