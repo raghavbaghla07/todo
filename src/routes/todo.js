@@ -25,13 +25,19 @@ todoRouter.get("/todos", userAuth, async (req, res) => {
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+
+    const search = req.query.search || "";
     const skip = (page - 1) * limit;
+
     try {
         const todos = await Todo.find({
-            userId: req.user._id
+            userId: req.user._id,
+            title: { $regex: search, $options: "i" }
         })
             .skip(skip)
             .limit(limit)
+            .sort({ createdAt: -1 })
+
         res.send(todos);
     } catch (err) {
         res.status(400).send("ERROR: " + err.message)
