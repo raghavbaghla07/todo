@@ -67,3 +67,10 @@
   - if present we will store this in req.user and called the next
 
 -
+
+## FRONTEND:
+
+1.  components:
+    - Navbar
+    - Body
+    -

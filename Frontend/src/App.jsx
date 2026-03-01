@@ -1,9 +1,12 @@
+import Navbar from "./components/Navbar";
+import SearchBar from "./components/SearchBar";
+import Home from "./components/Home";
 function App() {
   return (
     <div>
-      <p>hello world</p>{" "}
+      {/* <Home /> */}
+      <Navbar />
     </div>
   );
 }
-
 export default App;
