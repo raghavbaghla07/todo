@@ -27,8 +27,8 @@ const Signup = () => {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Signup successful 🎉");
-        navigate("/login");
+        localStorage.setItem("token", data.token);
+        navigate("/todos");
       } else {
         alert(data.message || "Signup failed");
       }

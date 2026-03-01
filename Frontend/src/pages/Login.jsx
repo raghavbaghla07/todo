@@ -25,9 +25,7 @@ const Login = () => {
       const data = await res.json();
 
       if (res.ok) {
-        // store token
         localStorage.setItem("token", data.token);
-
         alert("Login successful ✅");
 
         navigate("/todos"); // or dashboard

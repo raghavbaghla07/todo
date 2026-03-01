@@ -18,11 +18,18 @@ authRouter.post("/signup", async (req, res) => {
             password
         });
         await user.save();
-        res.send("user added succesfully");
+        const token = await user.getJWT();
+
+        res.status(201).json({
+            message: "User created successfully",
+            token
+        });
+
     } catch (err) {
         res
             .status(400)
             .send("ERROR: email already exists")
+
     }
 })
 
@@ -37,15 +44,20 @@ authRouter.post("/login", async (req, res) => {
         const isPasswordvalid = await user.validatePassword(password)
         if (!isPasswordvalid)
             throw new Error("invalid credentials")
-        else {
-            const token = await user.getJWT();
-            res.cookie("token", token)
-            res.send("user login succcessful")
-        }
+
+        const token = await user.getJWT();
+
+        res.status(200).json({
+            message: "Login successful",
+            token
+        });
+
     } catch (err) {
-        res.status(400).send("ERROR: " + err.message)
+        res.status(400).json({
+            message: err.message
+        });
     }
-})
+});
 
 authRouter.post("/logout", async (req, res) => {
     res.cookie("token", null, {
