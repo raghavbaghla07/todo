@@ -1,3 +1,4 @@
+app.set("trust proxy", 1);
 const express = require("express");
 const connectDB = require("./config/database");
 const app = express();
@@ -15,7 +16,6 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser())
-app.set("trust proxy", 1);
 const authRouter = require("./routes/auth");
 app.use("/", authRouter)
 
