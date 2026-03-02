@@ -75,7 +75,7 @@ authRouter.post("/logout", async (req, res) => {
     res.send("logout successful")
 })
 
-authRouter.get("/me", authMiddleware, (req, res) => {
+authRouter.get("/me", authRouter, (req, res) => {
     res.json({ user: req.user });
 });
 
