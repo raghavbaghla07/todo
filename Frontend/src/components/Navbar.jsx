@@ -4,12 +4,14 @@ import { logout } from "../api/auth";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
   const handleLogout = async () => {
     try {
       await logout();
-      navigate("/login");
+      navigate("/login", { replace: true });
     } catch (err) {
       console.error(err);
+      alert(err.message || "Logout failed");
     }
   };
 

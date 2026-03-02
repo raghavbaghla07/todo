@@ -1,30 +1,42 @@
 const SERVER = import.meta.env.VITE_API_URL;
 
-export const signup = (data) => {
-  return fetch(`${SERVER}/signup`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+const request = async (url, options = {}) => {
+  const headers = {
+    ...(options.body ? { "Content-Type": "application/json" } : {}),
+    ...(options.headers || {}),
+  };
+
+  const res = await fetch(`${SERVER}${url}`, {
+    ...options,
     credentials: "include",
-    body: JSON.stringify(data),
+    headers,
   });
+
+  const data = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    throw new Error(data?.message || "Something went wrong");
+  }
+
+  return data;
 };
 
-export const login = (data) => {
-  return fetch(`${SERVER}/login`, {
+// SIGNUP
+export const signup = (data) =>
+  request("/signup", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
     body: JSON.stringify(data),
   });
-};
 
-export const logout = () => {
-  return fetch(`${SERVER}/logout`, {
+// LOGIN
+export const login = (data) =>
+  request("/login", {
     method: "POST",
-    credentials: "include",
+    body: JSON.stringify(data),
   });
-};
+
+// LOGOUT
+export const logout = () =>
+  request("/logout", {
+    method: "POST",
+  });

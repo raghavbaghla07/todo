@@ -1,49 +1,51 @@
 const SERVER = import.meta.env.VITE_API_URL;
 
-// GET TODOS
-export const getTodos = (page = 1, limit = 10, search = "") => {
-  return fetch(`${SERVER}/todos?page=${page}&limit=${limit}&search=${search}`, {
-    method: "GET",
+const request = async (url, options = {}) => {
+  const headers = {
+    ...(options.body ? { "Content-Type": "application/json" } : {}),
+    ...(options.headers || {}),
+  };
+
+  const res = await fetch(`${SERVER}${url}`, {
+    ...options,
     credentials: "include",
+    headers,
   });
+
+  const data = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    throw new Error(data?.message || "Something went wrong");
+  }
+
+  return data;
 };
+
+// GET TODOS
+export const getTodos = (page = 1, limit = 10, search = "") =>
+  request(
+    `/todos?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`,
+  );
 
 // GET ONE
-export const getTodo = (id) => {
-  return fetch(`${SERVER}/todo/${id}`, {
-    method: "GET",
-    credentials: "include",
-  });
-};
+export const getTodo = (id) => request(`/todo/${id}`);
 
 // CREATE
-export const addTodo = (data) => {
-  return fetch(`${SERVER}/todo`, {
+export const addTodo = (data) =>
+  request("/todo", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
     body: JSON.stringify(data),
   });
-};
 
 // UPDATE
-export const updateTodo = (id, data) => {
-  return fetch(`${SERVER}/todo/${id}`, {
+export const updateTodo = (id, data) =>
+  request(`/todo/${id}`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
     body: JSON.stringify(data),
   });
-};
 
 // DELETE
-export const deleteTodo = (id) => {
-  return fetch(`${SERVER}/todo/${id}`, {
+export const deleteTodo = (id) =>
+  request(`/todo/${id}`, {
     method: "DELETE",
-    credentials: "include",
   });
-};

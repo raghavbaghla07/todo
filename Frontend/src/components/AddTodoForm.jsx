@@ -12,30 +12,39 @@ const AddTodoForm = ({ setTodos, todos, id, setId, refreshTodos }) => {
 
     try {
       if (id) {
-        const res = await updateTodo(id, { title, description });
-        const data = await res.json();
+        // update
+        const updatedTodo = await updateTodo(id, { title, description });
 
-        setTodos((prev) => prev.map((todo) => (todo._id === id ? data : todo)));
+        setTodos((prev) =>
+          prev.map((todo) => (todo._id === id ? updatedTodo : todo)),
+        );
       } else {
-        await addTodo({ title, description });
-        await refreshTodos();
+        // create
+        const newTodo = await addTodo({ title, description });
+
+        // instant UI update
+        setTodos((prev) => [newTodo, ...prev]);
+
+        //  server refresh
+        if (refreshTodos) await refreshTodos();
       }
 
       setId("");
       setTitle("");
       setDescription("");
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      alert(err.message || "Something went wrong");
     }
   };
 
   useEffect(() => {
     if (id) {
-      const todo = todos.find((d) => d._id === id);
+      const todo = todos.find((t) => t._id === id);
 
       if (todo) {
-        setTitle(todo.title);
-        setDescription(todo.description);
+        setTitle(todo.title || "");
+        setDescription(todo.description || "");
       }
     }
   }, [id, todos]);

@@ -1,6 +1,6 @@
-function TodoTable({ todos, deleteTodo, setId, viewTodo }) {
+function TodoTable({ todos = [], deleteTodo, setId, viewTodo }) {
   if (!todos.length) {
-    return <p className="text-center mt-10">No todos found</p>;
+    return <p className="text-center mt-10 text-gray-500">No todos found</p>;
   }
 
   return (
@@ -8,9 +8,11 @@ function TodoTable({ todos, deleteTodo, setId, viewTodo }) {
       <table className="table w-[70%]">
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th className="text-center">Action</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col" className="text-center">
+              Action
+            </th>
           </tr>
         </thead>
 
@@ -18,25 +20,29 @@ function TodoTable({ todos, deleteTodo, setId, viewTodo }) {
           {todos.map((todo) => (
             <tr key={todo._id}>
               <td>{todo.title}</td>
-              <td>{todo.description}</td>
+              <td>{todo.description || "-"}</td>
 
-              <td className="text-center">
+              <td className="text-center space-x-2">
                 <button
                   onClick={() => viewTodo(todo._id)}
-                  className="btn btn-sm btn-info mr-2"
+                  className="btn btn-sm btn-info"
                 >
                   View
                 </button>
 
                 <button
                   onClick={() => setId(todo._id)}
-                  className="btn btn-sm btn-warning mr-2"
+                  className="btn btn-sm btn-warning"
                 >
                   Edit
                 </button>
 
                 <button
-                  onClick={() => deleteTodo(todo._id)}
+                  onClick={() => {
+                    if (window.confirm("Delete this todo?")) {
+                      deleteTodo(todo._id);
+                    }
+                  }}
                   className="btn btn-sm btn-error"
                 >
                   Delete
@@ -49,4 +55,5 @@ function TodoTable({ todos, deleteTodo, setId, viewTodo }) {
     </div>
   );
 }
+
 export default TodoTable;

@@ -24,7 +24,8 @@ authRouter.post("/signup", async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "None"
+            sameSite: "None",
+            path: "/"
         });
 
         return res
@@ -73,7 +74,8 @@ authRouter.post("/login", async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "None"
+            sameSite: "None",
+            path: "/"
         });
         return res.status(200).json({
             message: "Login successful",
