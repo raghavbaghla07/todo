@@ -1,19 +1,34 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../api/auth";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
-        <button className="btn btn-ghost font-bold text-sm ml-20">
-          + Add todo
-        </button>
+        <button className="btn btn-ghost font-bold text-sm ml-20"></button>
       </div>
       <div className="navbar-center">
         <a className="btn btn-ghost text-xl">Your task manager</a>
       </div>
 
       <div className="navbar-end gap-4">
-        <button className="btn btn-ghost font-bold text-sm">Logout</button>
+        <button
+          onClick={handleLogout}
+          className="btn btn-ghost font-bold text-sm"
+        >
+          Logout
+        </button>
         <div className="dropdown dropdown-end pr-10">
           <div
             tabIndex={0}
