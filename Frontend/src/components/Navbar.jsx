@@ -15,9 +15,7 @@ const Navbar = () => {
 
   return (
     <div className="navbar bg-base-100 shadow-sm">
-      <div className="navbar-start">
-        <button className="btn btn-ghost font-bold text-sm ml-20"></button>
-      </div>
+      <div className="navbar-start"></div>
       <div className="navbar-center">
         <a className="btn btn-ghost text-xl">Your task manager</a>
       </div>
