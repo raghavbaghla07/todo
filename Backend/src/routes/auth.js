@@ -1,7 +1,7 @@
 const express = require('express');
 const authRouter = express.Router();
 const User = require("../models/user")
-const authMiddleware = require("../middlewares/auth")
+const { authMiddleware } = require("../middlewares/auth")
 const { validateSignUpData } = require("../utils/validation")
 
 authRouter.post("/signup", async (req, res) => {
