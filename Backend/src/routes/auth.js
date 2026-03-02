@@ -32,6 +32,11 @@ authRouter.post("/signup", async (req, res) => {
             .json({
                 message: "User created successfully",
                 loggedIn: true,
+                user: {
+                    _id: user._id,
+                    firstName: user.firstName,
+                    emailId: user.emailId
+                }
             });
 
     } catch (err) {
@@ -75,8 +80,10 @@ authRouter.post("/login", async (req, res) => {
         });
 
     } catch (err) {
-        return res.status(400).json({
-            message: err.message
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Something went wrong. Please try again."
         });
     }
 });
@@ -85,7 +92,8 @@ authRouter.post("/logout", async (req, res) => {
     res.clearCookie("token", {
         httpOnly: true,
         sameSite: "None",
-        secure: true
+        secure: true,
+        path: "/"
     });
     return res.json({
         message: "Logout successful"
@@ -93,7 +101,9 @@ authRouter.post("/logout", async (req, res) => {
 })
 
 authRouter.get("/me", userAuth, (req, res) => {
-    return res.json({ user: req.user });
+    return res.status(200).json({
+        user: req.user
+    });
 });
 
 
