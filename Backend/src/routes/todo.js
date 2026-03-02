@@ -2,9 +2,11 @@ const express = require("express")
 const todoRouter = express.Router();
 const { userAuth } = require("../middlewares/auth")
 const Todo = require("../models/todo");
-
 const { validateEditTodoData } = require("../utils/validation")
-//crate a todo
+
+const mongoose = require("mongoose");
+
+//create a todo
 todoRouter.post("/todo", userAuth, async (req, res) => {
     try {
         const { title, description } = req.body;
@@ -14,9 +16,11 @@ todoRouter.post("/todo", userAuth, async (req, res) => {
             userId: req.user._id
         });
         await todo.save();
-        res.send(todo);
+        return res.send(todo);
     } catch (err) {
-        res.status(400).send("ERROR: " + err.message)
+        return res.status(400).json({
+            message: err.message
+        });
     }
 })
 
@@ -38,30 +42,40 @@ todoRouter.get("/todos", userAuth, async (req, res) => {
             .limit(limit)
             .sort({ createdAt: -1 })
 
-        res.send(todos);
+        return res.send(todos);
     } catch (err) {
-        res.status(400).send("ERROR: " + err.message)
+        return res.status(400).json({
+            message: err.message
+        });
     }
 })
 
 // get todo by id
 todoRouter.get("/todo/:id", userAuth, async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id))
+            return res.status(400).send("Invalid todo id");
+
         const todo = await Todo.findOne({
             userId: req.user._id,
             _id: req.params.id
         })
         if (!todo)
-            res.status(404).send("todo not found");
-        res.send(todo);
+            return res.status(404).send("Todo not found");
+        return res.send(todo);
     } catch (err) {
-        res.status(400).send("ERROR: " + err.message)
+        return res.status(400).json({
+            message: err.message
+        });
     }
 })
 
 //update todo
 todoRouter.patch("/todo/:id", userAuth, async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id))
+            return res.status(400).send("Invalid todo id");
+
         if (!validateEditTodoData(req))
             return res.status(400).send("Invalid fields to update");
 
@@ -77,27 +91,34 @@ todoRouter.patch("/todo/:id", userAuth, async (req, res) => {
         );
 
         if (!updatedTodo)
-            return res.status(404).send("todo not found")
+            return res.status(404).send("Todo not found")
 
-        res.send(updatedTodo);
+        return res.send(updatedTodo);
 
     } catch (err) {
-        res.status(400).send("ERROR: " + err.message)
+        return res.status(400).json({
+            message: err.message
+        });
     }
 })
 
 // delete todo
 todoRouter.delete("/todo/:id", userAuth, async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id))
+            return res.status(400).send("Invalid todo id");
+
         const deleteTodo = await Todo.findOneAndDelete({
             userId: req.user._id,
             _id: req.params.id
         });
         if (!deleteTodo)
-            return res.status(404).send("Todo does not exist")
-        res.send("todo deleted successfully")
+            return res.status(404).send("Todo not found");
+        return res.send("Todo deleted successfully")
     } catch (err) {
-        res.status(400).send("ERROR: " + err.message)
+        return res.status(400).json({
+            message: err.message
+        });
     }
 })
 module.exports = todoRouter;

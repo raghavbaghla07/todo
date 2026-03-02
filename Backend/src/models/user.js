@@ -25,13 +25,14 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         validate(value) {
             if (!validator.isEmail(value)) {
-                throw new Error("Invalid e-mail adress");
+                throw new Error("Invalid email address");
             }
         }
     },
     password: {
         type: String,
         required: true,
+        select: false,
         validate(value) {
             if (!validator.isStrongPassword(value))
                 throw new Error("Enter a strong password")
@@ -42,14 +43,17 @@ const userSchema = new mongoose.Schema({
 })
 
 userSchema.pre("save", async function () {
-    const user = this;
-    if (user.isModified("password"))
+    try {
+        const user = this;
+        if (!user.isModified("password"))
+            return;
         user.password = await bcrypt.hash(user.password, 10);
+    } catch (err) {
+        console.log(err);
+    }
 })
 
-
-
-userSchema.methods.getJWT = async function () {
+userSchema.methods.getJWT = function () {
     const user = this;
     const token = jwt.sign(
         { _id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });

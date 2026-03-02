@@ -6,7 +6,7 @@ const { validateSignUpData } = require("../utils/validation")
 
 authRouter.post("/signup", async (req, res) => {
     // jo bhi req se user ka data ayagea we will send it in this
-    // as in out auth middleware we put user in req.user
+    // as in auth middleware we put user in req.user
     // we will receive it here
     try {
         validateSignUpData(req);
@@ -17,23 +17,32 @@ authRouter.post("/signup", async (req, res) => {
             emailId,
             password
         });
+
         await user.save();
         const token = await user.getJWT();
+
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "none"
+            sameSite: "None"
+        });
 
-        });
-        res.status(201).json({
-            message: "User created successfully",
-        });
+        return res
+            .status(201)
+            .json({
+                message: "User created successfully",
+                loggedIn: true,
+            });
 
     } catch (err) {
-        res
-            .status(400)
-            .send("ERROR: email already exists")
-
+        if (err.code === 11000) {
+            return res.status(409).json({
+                message: "Email already registered"
+            });
+        }
+        return res.status(400).json({
+            message: err.message
+        });
     }
 })
 
@@ -41,26 +50,32 @@ authRouter.post("/login", async (req, res) => {
 
     try {
         const { emailId, password } = req.body
-        const user = await User.findOne({ emailId });
+        const user = await User
+            .findOne({ emailId })
+            .select("+password");
         if (!user)
-            throw new Error("invalid credentials")
+            return res
+                .status(401)
+                .json({ message: "Invalid credentials" });
 
         const isPasswordvalid = await user.validatePassword(password)
         if (!isPasswordvalid)
-            throw new Error("invalid credentials")
+            return res
+                .status(401)
+                .json({ message: "Invalid credentials" });
 
         const token = await user.getJWT();
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "none"
+            sameSite: "None"
         });
-        res.status(200).json({
+        return res.status(200).json({
             message: "Login successful",
         });
 
     } catch (err) {
-        res.status(400).json({
+        return res.status(400).json({
             message: err.message
         });
     }
@@ -69,14 +84,16 @@ authRouter.post("/login", async (req, res) => {
 authRouter.post("/logout", async (req, res) => {
     res.clearCookie("token", {
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "None",
         secure: true
     });
-    res.send("logout successful")
+    return res.json({
+        message: "Logout successful"
+    });
 })
 
 authRouter.get("/me", userAuth, (req, res) => {
-    res.json({ user: req.user });
+    return res.json({ user: req.user });
 });
 
 

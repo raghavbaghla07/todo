@@ -12,15 +12,17 @@ const userAuth = async (req, res, next) => {
 
         // find the user
         const { _id } = decodedObj;
-        const user = await User.findById(_id);
+        const user = await User
+            .findById(_id)
+            .select("-password");
         if (!user)
-            throw new Error("user not found")
+            throw new Error("User not found")
         req.user = user
         next();
 
     } catch (err) {
 
-        let message = "Authentication failed";
+        let message = err.message || "Authentication failed";
 
         if (err.name === "TokenExpiredError") {
             message = "Session expired. Please login again.";

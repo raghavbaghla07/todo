@@ -14,8 +14,7 @@ const todoSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
-    }
-    ,
+    },
     completed: {
         type: Boolean,
         default: false,
@@ -23,5 +22,7 @@ const todoSchema = new mongoose.Schema({
     }
 
 }, { timestamps: true })
+
+todoSchema.index({ userId: 1 });
 
 module.exports = mongoose.model("Todo", todoSchema) 
