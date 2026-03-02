@@ -1,7 +1,7 @@
 const express = require('express');
 const authRouter = express.Router();
 const User = require("../models/user")
-
+const authMiddleware = require("../middleware/auth")
 const { validateSignUpData } = require("../utils/validation")
 
 authRouter.post("/signup", async (req, res) => {
@@ -75,7 +75,7 @@ authRouter.post("/logout", async (req, res) => {
     res.send("logout successful")
 })
 
-authRouter.get("/me", authRouter, (req, res) => {
+authRouter.get("/me", authMiddleware, (req, res) => {
     res.json({ user: req.user });
 });
 
