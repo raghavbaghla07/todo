@@ -1,24 +1,21 @@
 import { useState, useEffect } from "react";
 import React from "react";
 
-const SearchBar = () => {
+const SearchBar = ({ setSearch }) => {
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (searchText) {
-        console.log("API Call for:", searchText);
-        // You can put your Dispatch or API fetch logic here
-      }
+      setSearch(searchText); // send value to parent
     }, 300);
+
     return () => {
       clearTimeout(timer);
     };
-  }, [searchText]);
+  }, [searchText, setSearch]);
 
   return (
     <div className="my-6 mx-auto w-1/2">
-      {" "}
       <div className="relative w-full">
         <input
           type="text"
@@ -27,6 +24,7 @@ const SearchBar = () => {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
+
         <button className="absolute right-3 top-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -47,4 +45,5 @@ const SearchBar = () => {
     </div>
   );
 };
+
 export default SearchBar;

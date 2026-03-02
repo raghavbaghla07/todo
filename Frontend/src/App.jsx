@@ -3,7 +3,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProtectedRoute from "./routes/ProtectedRoutes";
-import { Todos } from "./pages/Todos";
+import Todos from "./pages/Todos";
+
 function App() {
   return (
     <div>
