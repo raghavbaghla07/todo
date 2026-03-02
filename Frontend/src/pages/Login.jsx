@@ -10,28 +10,30 @@ const Login = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await login(formData);
-      const data = await res.json();
+    if (loading) return;
 
-      if (res.ok) {
-        navigate("/todos"); // or dashboard
-      } else {
-        alert(data.message || "Login failed");
-      }
+    try {
+      setLoading(true);
+
+      await login(formData);
+
+      navigate("/todos", { replace: true });
     } catch (err) {
-      console.error(err);
-      alert("Server error");
+      alert(err.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,9 +45,10 @@ const Login = () => {
         <input
           name="emailId"
           type="email"
-          placeholder="emailId"
+          placeholder="Email"
           value={formData.emailId}
           onChange={handleChange}
+          required
         />
 
         <br />
@@ -57,12 +60,15 @@ const Login = () => {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
+          required
         />
 
         <br />
         <br />
 
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );

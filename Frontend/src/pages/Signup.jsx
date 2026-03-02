@@ -12,29 +12,30 @@ const Signup = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await signup(formData);
-      const data = await res.json();
+    if (loading) return;
 
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        navigate("/todos");
-      } else {
-        alert(data.message || "Signup failed");
-      }
+    try {
+      setLoading(true);
+
+      await signup(formData);
+
+      navigate("/todos", { replace: true });
     } catch (error) {
-      console.error(error);
-      alert("Server error");
+      alert(error.message || "Signup failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,6 +49,7 @@ const Signup = () => {
           placeholder="First Name"
           value={formData.firstName}
           onChange={handleChange}
+          required
         />
 
         <br />
@@ -58,6 +60,7 @@ const Signup = () => {
           placeholder="Last Name"
           value={formData.lastName}
           onChange={handleChange}
+          required
         />
 
         <br />
@@ -66,9 +69,10 @@ const Signup = () => {
         <input
           name="emailId"
           type="email"
-          placeholder="emailId"
+          placeholder="Email"
           value={formData.emailId}
           onChange={handleChange}
+          required
         />
 
         <br />
@@ -80,12 +84,15 @@ const Signup = () => {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
+          required
         />
 
         <br />
         <br />
 
-        <button type="submit">Sign Up</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Creating..." : "Sign Up"}
+        </button>
       </form>
     </div>
   );

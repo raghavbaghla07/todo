@@ -20,11 +20,11 @@ const Todos = () => {
 
   const fetchTodos = async () => {
     try {
-      const res = await getTodos(page, limit, search);
-      const data = await res.json();
+      const data = await getTodos(page, limit, search);
       setTodos(data);
     } catch (err) {
       console.error(err);
+      alert(err.message || "Failed to load todos");
     }
   };
 
@@ -34,11 +34,11 @@ const Todos = () => {
 
   const viewTodo = async (id) => {
     try {
-      const res = await getTodo(id);
-      const data = await res.json();
+      const data = await getTodo(id);
       alert(`Title: ${data.title}\nDescription: ${data.description}`);
     } catch (err) {
       console.error(err);
+      alert(err.message || "Failed to fetch todo");
     }
   };
 
@@ -48,6 +48,7 @@ const Todos = () => {
       fetchTodos();
     } catch (err) {
       console.error(err);
+      alert(err.message || "Delete failed");
     }
   };
 
