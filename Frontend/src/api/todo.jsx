@@ -1,5 +1,5 @@
 const SERVER = import.meta.env.VITE_API_URL;
-console.log("API URL:", SERVER);
+
 // GET TODOS
 export const getTodos = (page = 1, limit = 10, search = "") => {
   return fetch(`${SERVER}/todos?page=${page}&limit=${limit}&search=${search}`, {

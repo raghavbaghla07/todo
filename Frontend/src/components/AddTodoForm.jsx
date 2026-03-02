@@ -1,34 +1,39 @@
 import React, { useEffect, useState } from "react";
+import { addTodo, updateTodo } from "../api/todo";
 
 const AddTodoForm = ({ setTodos, todos, id, setId }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!title.trim()) return;
 
-    if (id) {
-      updateById(id);
-    } else {
-      const obj = {
-        id: Date.now(),
-        title,
-        description,
-      };
+    try {
+      if (id) {
+        const res = await updateTodo(id, { title, description });
+        const data = await res.json();
 
-      setTodos([...todos, obj]);
+        setTodos((prev) => prev.map((todo) => (todo._id === id ? data : todo)));
+      } else {
+        const res = await addTodo({ title, description });
+        const data = await res.json();
+
+        setTodos((prev) => [data, ...prev]);
+      }
+
+      setId("");
+      setTitle("");
+      setDescription("");
+    } catch (err) {
+      console.log(err);
     }
-
-    setId("");
-    setTitle("");
-    setDescription("");
   };
 
   useEffect(() => {
     if (id) {
-      const todo = todos.find((d) => d.id === id);
+      const todo = todos.find((d) => d._id === id);
 
       if (todo) {
         setTitle(todo.title);
@@ -36,14 +41,6 @@ const AddTodoForm = ({ setTodos, todos, id, setId }) => {
       }
     }
   }, [id, todos]);
-
-  const updateById = (id) => {
-    const obj = { title, description };
-
-    setTodos((prev) =>
-      prev.map((todo) => (todo.id === id ? { ...todo, ...obj } : todo)),
-    );
-  };
 
   return (
     <form onSubmit={handleSubmit}>

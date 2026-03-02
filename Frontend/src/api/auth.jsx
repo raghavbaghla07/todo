@@ -1,4 +1,5 @@
 const SERVER = import.meta.env.VITE_API_URL;
+
 export const signup = (data) => {
   return fetch(`${SERVER}/signup`, {
     method: "POST",

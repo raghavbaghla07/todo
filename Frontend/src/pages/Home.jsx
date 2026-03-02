@@ -5,7 +5,7 @@ const Home = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4">
-      <h1 className="text-5xl md:text-7xl font-extrabold mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+      <h1 className="text-5xl md:text-7xl font-extrabold mb-8 bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
         Your task manager
       </h1>
       <p className="text-lg mb-10 max-w-lg opacity-80">Ready to commit?</p>
