@@ -1,11 +1,20 @@
 import { Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const ProtectedRoute = ({ children }) => {
-  const hasToken = document.cookie.includes("token");
+  const [isAuth, setIsAuth] = useState(null);
 
-  if (!hasToken) {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/me`, {
+      credentials: "include",
+    })
+      .then(res => setIsAuth(res.ok))
+      .catch(() => setIsAuth(false));
+  }, []);
+
+  if (isAuth === null) return <div>Loading...</div>;
+
+  if (!isAuth) return <Navigate to="/login" />;
 
   return children;
 };
