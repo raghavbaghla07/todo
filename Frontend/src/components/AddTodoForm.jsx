@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { addTodo, updateTodo } from "../api/todo";
 
-const AddTodoForm = ({ setTodos, todos, id, setId }) => {
+const AddTodoForm = ({ setTodos, todos, id, setId, refreshTodos }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -17,10 +17,8 @@ const AddTodoForm = ({ setTodos, todos, id, setId }) => {
 
         setTodos((prev) => prev.map((todo) => (todo._id === id ? data : todo)));
       } else {
-        const res = await addTodo({ title, description });
-        const data = await res.json();
-
-        setTodos((prev) => [data, ...prev]);
+        await addTodo({ title, description });
+        await refreshTodos();
       }
 
       setId("");

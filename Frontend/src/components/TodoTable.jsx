@@ -1,4 +1,4 @@
-function TodoTable({ todos, deleteTodo, setId }) {
+function TodoTable({ todos, deleteTodo, setId, viewTodo }) {
   if (!todos.length) {
     return <p className="text-center mt-10">No todos found</p>;
   }
@@ -21,6 +21,13 @@ function TodoTable({ todos, deleteTodo, setId }) {
               <td>{todo.description}</td>
 
               <td className="text-center">
+                <button
+                  onClick={() => viewTodo(todo._id)}
+                  className="btn btn-sm btn-info mr-2"
+                >
+                  View
+                </button>
+
                 <button
                   onClick={() => setId(todo._id)}
                   className="btn btn-sm btn-warning mr-2"

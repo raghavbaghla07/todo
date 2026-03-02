@@ -4,15 +4,19 @@ import SearchBar from "../components/SearchBar";
 import AddTodoForm from "../components/AddTodoForm";
 import TodoTable from "../components/TodoTable";
 
-import { getTodos, deleteTodo as deleteTodoApi } from "../api/todo";
+import { getTodo, getTodos, deleteTodo as deleteTodoApi } from "../api/todo";
 
 const Todos = () => {
   const [todos, setTodos] = useState([]);
   const [search, setSearch] = useState("");
   const [id, setId] = useState("");
+  const [page, setPage] = useState(1);
 
-  const page = 1;
-  const limit = 10;
+  const limit = 7;
+
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
 
   const fetchTodos = async () => {
     try {
@@ -26,7 +30,17 @@ const Todos = () => {
 
   useEffect(() => {
     fetchTodos();
-  }, [search]);
+  }, [page, search]);
+
+  const viewTodo = async (id) => {
+    try {
+      const res = await getTodo(id);
+      const data = await res.json();
+      alert(`Title: ${data.title}\nDescription: ${data.description}`);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const deleteTodo = async (todoId) => {
     try {
@@ -54,7 +68,32 @@ const Todos = () => {
           refreshTodos={fetchTodos}
         />
 
-        <TodoTable todos={todos} deleteTodo={deleteTodo} setId={setId} />
+        <TodoTable
+          todos={todos}
+          deleteTodo={deleteTodo}
+          viewTodo={viewTodo}
+          setId={setId}
+        />
+
+        <div className="flex justify-center gap-4 mt-6">
+          <button
+            className="btn"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
+            Previous
+          </button>
+
+          <span className="flex items-center">Page {page}</span>
+
+          <button
+            className="btn"
+            disabled={todos.length < limit}
+            onClick={() => setPage(page + 1)}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </>
   );
