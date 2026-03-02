@@ -6,7 +6,7 @@ const userAuth = async (req, res, next) => {
     try {
         const { token } = req.cookies;
         if (!token)
-            throw new Error("invalid token");
+            throw new Error("Authentication required. Please login.");
 
         const decodedObj = jwt.verify(token, process.env.JWT_SECRET)
 
@@ -19,9 +19,14 @@ const userAuth = async (req, res, next) => {
         next();
 
     } catch (err) {
-        res.status(401).json({
-            message: err.message
-        });
+
+        let message = "Authentication failed";
+
+        if (err.name === "TokenExpiredError") {
+            message = "Session expired. Please login again.";
+        }
+
+        res.status(401).json({ message });
     }
 }
 module.exports = { userAuth };
