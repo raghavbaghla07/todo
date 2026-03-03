@@ -21,12 +21,16 @@ const Todos = () => {
   const fetchTodos = async () => {
     try {
       const data = await getTodos(page, limit, search);
+
+      console.log("TODOS RESPONSE:", data);
+      console.log("IS ARRAY?", Array.isArray(data));
+
       setTodos(data);
     } catch (err) {
       console.error(err);
-      alert(err.message || "Failed to load todos");
     }
   };
+  update;
 
   useEffect(() => {
     fetchTodos();
