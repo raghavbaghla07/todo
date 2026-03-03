@@ -1,4 +1,4 @@
-function TodoTable({ todos = [], deleteTodo, setId, viewTodo }) {
+function TodoTable({ todos = [], deleteTodo, viewTodo, setEditTodo }) {
   if (!todos.length) {
     return <p className="text-center mt-10 text-gray-500">No todos found</p>;
   }
@@ -8,11 +8,9 @@ function TodoTable({ todos = [], deleteTodo, setId, viewTodo }) {
       <table className="table w-[70%]">
         <thead>
           <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Description</th>
-            <th scope="col" className="text-center">
-              Action
-            </th>
+            <th>Title</th>
+            <th>Description</th>
+            <th className="text-center">Action</th>
           </tr>
         </thead>
 
@@ -31,7 +29,7 @@ function TodoTable({ todos = [], deleteTodo, setId, viewTodo }) {
                 </button>
 
                 <button
-                  onClick={() => setId(todo._id)}
+                  onClick={() => setEditTodo(todo)}
                   className="btn btn-sm btn-warning"
                 >
                   Edit

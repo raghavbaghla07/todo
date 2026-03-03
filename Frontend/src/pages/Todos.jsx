@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import AddTodoForm from "../components/AddTodoForm";
 import TodoTable from "../components/TodoTable";
+import EditTodoModal from "../components/EditTodoModal";
 
 import { getTodo, getTodos, deleteTodo as deleteTodoApi } from "../api/todo";
 
 const Todos = () => {
   const [todos, setTodos] = useState([]);
   const [search, setSearch] = useState("");
-  const [id, setId] = useState("");
   const [page, setPage] = useState(1);
+  const [editTodo, setEditTodo] = useState(null);
 
   const limit = 7;
 
@@ -21,13 +22,9 @@ const Todos = () => {
   const fetchTodos = async () => {
     try {
       const data = await getTodos(page, limit, search);
-
-      console.log("TODOS RESPONSE:", data);
-      console.log("IS ARRAY?", Array.isArray(data));
-
       setTodos(data);
     } catch (err) {
-      console.error(err);
+      alert(err.message || "Failed to load todos");
     }
   };
 
@@ -40,7 +37,6 @@ const Todos = () => {
       const data = await getTodo(id);
       alert(`Title: ${data.title}\nDescription: ${data.description}`);
     } catch (err) {
-      console.error(err);
       alert(err.message || "Failed to fetch todo");
     }
   };
@@ -50,7 +46,6 @@ const Todos = () => {
       await deleteTodoApi(todoId);
       fetchTodos();
     } catch (err) {
-      console.error(err);
       alert(err.message || "Delete failed");
     }
   };
@@ -58,25 +53,18 @@ const Todos = () => {
   return (
     <>
       <Navbar />
-
       <SearchBar setSearch={setSearch} />
 
       <div className="container mt-4">
         <h1 className="text-center mb-4">Todo Dashboard</h1>
 
-        <AddTodoForm
-          id={id}
-          setId={setId}
-          todos={todos}
-          setTodos={setTodos}
-          refreshTodos={fetchTodos}
-        />
+        <AddTodoForm refreshTodos={fetchTodos} />
 
         <TodoTable
           todos={todos}
           deleteTodo={deleteTodo}
           viewTodo={viewTodo}
-          setId={setId}
+          setEditTodo={setEditTodo}
         />
 
         <div className="flex justify-center gap-4 mt-6">
@@ -99,6 +87,14 @@ const Todos = () => {
           </button>
         </div>
       </div>
+
+      {editTodo && (
+        <EditTodoModal
+          todo={editTodo}
+          closeModal={() => setEditTodo(null)}
+          refreshTodos={fetchTodos}
+        />
+      )}
     </>
   );
 };

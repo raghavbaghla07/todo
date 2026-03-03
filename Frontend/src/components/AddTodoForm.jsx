@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { addTodo, updateTodo } from "../api/todo";
+import { useState } from "react";
+import { addTodo } from "../api/todo";
 
-const AddTodoForm = ({ setTodos, todos, id, setId, refreshTodos }) => {
+const AddTodoForm = ({ refreshTodos }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -11,70 +11,35 @@ const AddTodoForm = ({ setTodos, todos, id, setId, refreshTodos }) => {
     if (!title.trim()) return;
 
     try {
-      if (id) {
-        const updatedTodo = await updateTodo(id, {
-          title,
-          description,
-        });
-
-        setTodos((prev) =>
-          prev.map((todo) => (todo._id === id ? updatedTodo : todo)),
-        );
-      } else {
-        const newTodo = await addTodo({
-          title,
-          description,
-        });
-
-        setTodos((prev) => [newTodo, ...prev]);
-      }
-
-      setId("");
+      await addTodo({ title, description });
+      await refreshTodos();
       setTitle("");
       setDescription("");
     } catch (err) {
-      alert(err.message || "Operation failed");
+      alert(err.message || "Failed to add todo");
     }
   };
 
-  useEffect(() => {
-    if (id) {
-      const todo = todos.find((t) => t._id === id);
-
-      if (todo) {
-        setTitle(todo.title || "");
-        setDescription(todo.description || "");
-      }
-    }
-  }, [id, todos]);
-
   return (
     <form onSubmit={handleSubmit}>
-      <div
-        className="container my-5 text-center"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <div className="flex justify-center items-center gap-4 my-6">
         <input
-          value={title}
-          className="mx-2"
+          className="input input-bordered"
           type="text"
           placeholder="Title"
+          value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
 
         <input
-          value={description}
-          className="mx-2"
+          className="input input-bordered"
           type="text"
           placeholder="Description"
+          value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <button className="btn btn-warning">{id ? "Update" : "Add"}</button>
+        <button className="btn btn-primary">Add</button>
       </div>
     </form>
   );
