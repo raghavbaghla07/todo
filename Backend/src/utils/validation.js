@@ -6,8 +6,8 @@ const validateSignUpData = (req) => {
         throw new Error("First name and last name are required")
     if (!emailId || !validator.isEmail(emailId))
         throw new Error("Email is not valid")
-    if (!password || !validator.isStrongPassword(password))
-        throw new Error("Choose a strong password")
+    if (!password || password.length < 6)
+        throw new Error("Password must be at least 6 characters")
 }
 
 const validateEditTodoData = (req) => {

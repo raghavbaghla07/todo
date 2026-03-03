@@ -4,6 +4,8 @@ import { updateTodo } from "../api/todo";
 const EditTodoModel = ({ todo, closeModal, refreshTodos }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (todo) {
@@ -13,12 +15,27 @@ const EditTodoModel = ({ todo, closeModal, refreshTodos }) => {
   }, [todo]);
 
   const handleUpdate = async () => {
+    if (loading) return; // prevent double click
+
+    if (!title.trim()) {
+      setError("Title is required");
+      return;
+    }
+
+    if (!description.trim()) {
+      setError("Description is required");
+      return;
+    }
     try {
+      setLoading(true);
+      setError("");
       await updateTodo(todo._id, { title, description });
       await refreshTodos();
       closeModal();
     } catch (err) {
-      alert(err.message || "Update failed");
+      setError(err.message || "Update failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,7 +61,11 @@ const EditTodoModel = ({ todo, closeModal, refreshTodos }) => {
         />
 
         <div className="modal-action">
-          <button className="btn btn-primary" onClick={handleUpdate}>
+          <button
+            className="btn btn-primary"
+            onClick={handleUpdate}
+            disabled={loading}
+          >
             Save
           </button>
           <button className="btn" onClick={closeModal}>
