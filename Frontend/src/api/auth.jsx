@@ -1,4 +1,4 @@
-const SERVER = import.meta.env.VITE_API_URL;
+const SERVER = "/api";
 
 const request = async (url, options = {}) => {
   const headers = {
