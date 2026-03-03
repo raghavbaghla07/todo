@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { updateTodo } from "../api/todo";
 
-const EditTodoModal = ({ todo, closeModal, refreshTodos }) => {
+const EditTodoModel = ({ todo, closeModal, refreshTodos }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -56,4 +56,4 @@ const EditTodoModal = ({ todo, closeModal, refreshTodos }) => {
   );
 };
 
-export default EditTodoModal;
+export default EditTodoModel;

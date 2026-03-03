@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import AddTodoForm from "../components/AddTodoForm";
 import TodoTable from "../components/TodoTable";
-import EditTodoModal from "../components/EditTodoModal";
+import EditTodoModel from "../components/EditTodoModel";
 
 import { getTodo, getTodos, deleteTodo as deleteTodoApi } from "../api/todo";
 
@@ -89,7 +89,7 @@ const Todos = () => {
       </div>
 
       {editTodo && (
-        <EditTodoModal
+        <EditTodoModel
           todo={editTodo}
           closeModal={() => setEditTodo(null)}
           refreshTodos={fetchTodos}
