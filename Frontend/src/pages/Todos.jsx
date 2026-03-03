@@ -30,7 +30,6 @@ const Todos = () => {
       console.error(err);
     }
   };
-  update;
 
   useEffect(() => {
     fetchTodos();
