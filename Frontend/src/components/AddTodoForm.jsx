@@ -12,13 +12,19 @@ const AddTodoForm = ({ setTodos, todos, id, setId, refreshTodos }) => {
 
     try {
       if (id) {
-        const updatedTodo = await updateTodo(id, { title, description });
+        const updatedTodo = await updateTodo(id, {
+          title,
+          description,
+        });
 
         setTodos((prev) =>
           prev.map((todo) => (todo._id === id ? updatedTodo : todo)),
         );
       } else {
-        const newTodo = await addTodo({ title, description });
+        const newTodo = await addTodo({
+          title,
+          description,
+        });
 
         setTodos((prev) => [newTodo, ...prev]);
       }
