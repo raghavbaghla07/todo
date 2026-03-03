@@ -12,29 +12,22 @@ const AddTodoForm = ({ setTodos, todos, id, setId, refreshTodos }) => {
 
     try {
       if (id) {
-        // update
         const updatedTodo = await updateTodo(id, { title, description });
 
         setTodos((prev) =>
           prev.map((todo) => (todo._id === id ? updatedTodo : todo)),
         );
       } else {
-        // create
         const newTodo = await addTodo({ title, description });
 
-        // instant UI update
         setTodos((prev) => [newTodo, ...prev]);
-
-        //  server refresh
-        if (refreshTodos) await refreshTodos();
       }
 
       setId("");
       setTitle("");
       setDescription("");
     } catch (err) {
-      console.error(err);
-      alert(err.message || "Something went wrong");
+      alert(err.message || "Operation failed");
     }
   };
 
