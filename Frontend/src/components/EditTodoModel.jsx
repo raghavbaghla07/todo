@@ -29,7 +29,9 @@ const EditTodoModel = ({ todo, closeModal, refreshTodos }) => {
     try {
       setLoading(true);
       setError("");
+
       await updateTodo(todo._id, { title, description });
+
       await refreshTodos();
       closeModal();
     } catch (err) {
@@ -49,16 +51,24 @@ const EditTodoModel = ({ todo, closeModal, refreshTodos }) => {
         <input
           className="input input-bordered w-full mb-3"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            if (error) setError("");
+          }}
           placeholder="Title"
         />
 
         <input
           className="input input-bordered w-full mb-3"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            if (error) setError("");
+          }}
           placeholder="Description"
         />
+
+        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 
         <div className="modal-action">
           <button
